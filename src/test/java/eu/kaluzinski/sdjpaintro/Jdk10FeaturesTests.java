@@ -10,10 +10,9 @@ class Jdk10FeaturesTests {
 
 	@Test
 	public void shouldThrowUnsupportedOperationExceptionWhileAddingValueToReadOnlyArray() {
-		assertThrows(NumberFormatException.class, () -> {
+		assertThrows(UnsupportedOperationException.class, () -> {
 			List<Integer> copyList = List.copyOf(List.of(1));
 			copyList.add(4);
 		});
 	}
-
 }
