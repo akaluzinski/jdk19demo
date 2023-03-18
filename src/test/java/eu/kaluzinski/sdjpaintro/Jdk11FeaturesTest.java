@@ -3,12 +3,18 @@ package eu.kaluzinski.sdjpaintro;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.net.http.HttpResponse.BodyHandlers.ofString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Jdk11FeaturesTest {
@@ -30,6 +36,19 @@ public class Jdk11FeaturesTest {
         Path tempFile = Files.createTempFile(Files.createTempDirectory("tmpDirPrefix").toAbsolutePath(), "demo", ".txt");
         Path filePath = Files.writeString(tempFile, "Sample text");
         String fileContent = Files.readString(filePath);
-        assertEquals(fileContent,"Sample text");
+        assertEquals(fileContent, "Sample text");
+    }
+
+    @Test
+    void shouldCallGetRequest() throws IOException, InterruptedException {
+        HttpClient httpClient = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .connectTimeout(Duration.ofSeconds(3))
+                .build();
+        HttpResponse httpResponse = httpClient.send(HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("https://akaluzinski.github.io/"))
+                .build(), ofString());
+        assertEquals(httpResponse.statusCode(), 200);
     }
 }
