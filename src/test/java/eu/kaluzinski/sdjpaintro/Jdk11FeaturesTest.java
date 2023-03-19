@@ -45,7 +45,7 @@ public class Jdk11FeaturesTest {
                 .version(HttpClient.Version.HTTP_2)
                 .connectTimeout(Duration.ofSeconds(3))
                 .build();
-        HttpResponse httpResponse = httpClient.send(HttpRequest.newBuilder()
+        HttpResponse<String> httpResponse = httpClient.send(HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create("https://akaluzinski.github.io/"))
                 .build(), ofString());
