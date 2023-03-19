@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.NumberFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,6 +59,19 @@ public class Jdk12FeaturesTest {
                 NumberFormat.getCompactNumberInstance(localePlPl, NumberFormat.Style.LONG);
         longNumberFormat.setMaximumFractionDigits(2);
         assertEquals("2,59 tysiące", longNumberFormat.format(2592));
+    }
+
+    @Test
+    public void shouldReturnValueFromSwitchCaseExpression() {
+        LocalDate date = LocalDate.of(2023, 11, 11);
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+
+        String typeOfDay = switch (dayOfWeek) {
+            case MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY -> "Working Day";
+            case SATURDAY, SUNDAY -> "Weekend";
+        };
+
+        assertEquals("Weekend", typeOfDay);
     }
 
     private Path createTextFile(String prefix, String content) throws IOException {
