@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class Jdk12FeaturesTest {
 
@@ -72,6 +73,17 @@ public class Jdk12FeaturesTest {
         };
 
         assertEquals("Weekend", typeOfDay);
+    }
+
+    @Test
+    void shouldDetectTypeInPatternMatching() {
+        Object obj = "test";
+        if (obj instanceof String s) {
+            int length = s.length();
+            assertEquals(4, length);
+        }else{
+            fail("You shall not pass.");
+        }
     }
 
     private Path createTextFile(String prefix, String content) throws IOException {
