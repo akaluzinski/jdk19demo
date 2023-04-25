@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 public class AppleTree {
     public static AppleTree[] newTreeGarden(int size) {
         AppleTree[] appleTrees = IntStream.range(0, size)
-                .mapToObj(i -> new AppleTree("Apple Tree#" + i))
+                .mapToObj(i -> new AppleTree("Apple Tree#%d".formatted(i)))
                 .toArray(AppleTree[]::new);
         return appleTrees;
     }
