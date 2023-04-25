@@ -5,29 +5,26 @@ import java.util.stream.IntStream;
 
 public class AppleTree {
     public static AppleTree[] newTreeGarden(int size) {
-        AppleTree[] appleTrees = IntStream.range(0, size)
+        return IntStream.range(0, size)
                 .mapToObj(i -> new AppleTree("Apple Tree#%d".formatted(i)))
                 .toArray(AppleTree[]::new);
-        return appleTrees;
     }
 
     private final String treeLabel;
-    private final int nunberOfApples;
+    private final int numberOfApples;
 
     public AppleTree(String treeLabel) {
         this.treeLabel = treeLabel;
-        nunberOfApples = 3;
+        numberOfApples = 3;
     }
 
-    public int pickApples(String workerName) {
+    public int pickApples() {
         try {
-            System.out.printf("%s started picking from %s%n", workerName, treeLabel);
-            TimeUnit.SECONDS.sleep(1);
-            System.out.printf("%s picked from %s%n", workerName, treeLabel);
+            TimeUnit.MICROSECONDS.sleep(150);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        return nunberOfApples;
+        return numberOfApples;
     }
 
 }

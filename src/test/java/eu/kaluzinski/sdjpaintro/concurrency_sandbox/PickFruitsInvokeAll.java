@@ -1,6 +1,7 @@
 package eu.kaluzinski.sdjpaintro.concurrency_sandbox;
 
 import eu.kaluzinski.sdjpaintro.concurrency_sandbox.lesson1.AppleTree;
+import eu.kaluzinski.sdjpaintro.concurrency_sandbox.lesson1.PickFruitTask;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -15,8 +16,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PickFruitsInvokeAll {
 
+    private static int apply(Future<Integer> futureResult) {
+        try {
+            return futureResult.get().intValue();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Test
-    public void shouldPickAll() {
+    public void shouldPickAllUsingInvokeAll() {
         AppleTree[] appleTrees = AppleTree.newTreeGarden(6);
         Callable<Integer> applePicker1 = createApplePicker(appleTrees, 0, 2, "Picker1");
         Callable<Integer> applePicker2 = createApplePicker(appleTrees, 2, 4, "Picker2");
@@ -24,16 +33,21 @@ public class PickFruitsInvokeAll {
         List<Future<Integer>> futures = ForkJoinPool.commonPool()
                 .invokeAll(Arrays.asList(applePicker1, applePicker2, applePicker3));
 
-        int result = futures.stream().map(f -> {
-            try {
-                return f.get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
-        }).mapToInt(Integer::intValue).sum();
+        int result = futures.stream()
+                .mapToInt(PickFruitsInvokeAll::apply)
+                .sum();
 
+        assertEquals(18, result);
+    }
 
-        assertEquals(result, 18);
+    @Test
+    public void shouldPickAllUsingRecursiveTask() {
+        AppleTree[] appleTrees = AppleTree.newTreeGarden(12);
+        PickFruitTask task = new PickFruitTask(appleTrees, 0, appleTrees.length - 1);
+
+        int result = ForkJoinPool.commonPool().invoke(task);
+        assertEquals(36, result);
+
     }
 
 }
